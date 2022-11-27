@@ -77,7 +77,6 @@ jobs:
           working_directory: ./frontend
           command: |
             npm install
-            npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
 
   scan-backend:
@@ -92,7 +91,6 @@ jobs:
           working_directory: ./backend
           command: |
             npm install
-            npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
 workflows:
   default:
