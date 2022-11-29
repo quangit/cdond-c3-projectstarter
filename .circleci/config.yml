@@ -168,7 +168,7 @@ jobs:
       # Here's where you will add some code to rollback on failure
   run-migrations:
     docker:
-      - image: cimg/node:13.8.0
+      - image: sleavely/node-awscli:14.x
     steps:
       - checkout
       - run:
