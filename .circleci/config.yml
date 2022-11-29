@@ -190,21 +190,9 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: cimg/node:13.8.0
+      - image: sleavely/node-awscli:14.x
     steps:
       # Checkout code from git
-      - run:
-          name: Install dependencies
-          command: |
-            sudo apt update
-            sudo apt install -y tar gzip curl software-properties-common
-            # aws-cli
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-            # ansible
-            sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible
       - run:
           name: Get backend url
           command: |
@@ -248,6 +236,45 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
+
+  smoke-test:
+    docker:
+      - image: python:3.9.1-alpine3.12
+    steps:
+      # Checkout code from git
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update curl
+            pip install awscli
+      - run:
+          name: Backend smoke test.
+          command: |
+            BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+            export API_URL=http://${BACKEND_PUBLIC_IP}:3030
+            echo ${API_URL}
+            if curl -s "${API_URL}/api/status" | grep "ok"
+            then
+              exit 0
+            else
+              exit 1
+            fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.${AWS_DEFAULT_REGION}.amazonaws.com"             
+            echo ${URL} 
+            if curl -s ${URL} | grep "Welcome"
+            then
+              exit 0
+            else
+              exit 1
+            fi
+      # Here's where you will add some code to rollback on failure  
+
 workflows:
   default:
     jobs:
@@ -276,3 +303,5 @@ workflows:
       - deploy-frontend:
           requires:
             - run-migrations
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
