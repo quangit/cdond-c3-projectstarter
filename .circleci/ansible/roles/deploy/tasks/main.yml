@@ -10,14 +10,10 @@
     src: artifact.tar.gz
     dest: ~/backend-app
 
-- name: "Installing node dependencies"
-  shell: |
-    cd ~/backend-app
-    npm install
-
 - name: "Run node app with pm2"
   shell: |
     cd ~/backend-app/dist
+    npm install
     ls
     pm2 stop default
     pm2 start main.js
