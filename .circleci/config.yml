@@ -287,6 +287,7 @@ jobs:
             ls
             tar -czvf artifact.tar.gz dist
             cd ..
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
             cat .circleci/ansible/inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
