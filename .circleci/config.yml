@@ -282,9 +282,11 @@ jobs:
           name: Deploy backend
           command: |
             cd backend
+            npm install
+            npm run build
             ls
             tar -czvf artifact.tar.gz dist
-            cd ../
+            cd ..
             cat .circleci/ansible/inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
