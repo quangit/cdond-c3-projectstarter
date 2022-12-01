@@ -14,7 +14,7 @@
 - name: "Run node app with pm2"
   become: true
   shell: |
-    command: pm2 start -f ./main.js
+    command: pm2 start -f main.js
   args:
       chdir: /home/ubuntu/uda_app/dist
   register: execute_node
