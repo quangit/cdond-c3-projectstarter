@@ -19,16 +19,18 @@
     cd /home/ubuntu/backend
     tar -vxf artifact.tar.gz
 
+- name: "Installing node dependencies"
+  shell: |
+    cd /home/ubuntu/backend
+    npm install
+    ls
+
 - name: Start backend
   become: true
   shell: |
-    cd /home/ubuntu/backend
-    ls
-    npm install
+    cd /home/ubuntu/backend/dist
     pm2 stop default
-    pm2 start npm -- start
-    cd dist
-    pm2 start -f main.js --update-env
+    pm2 start -f main.js
   environment:
      ENVIRONMENT: production
      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
