@@ -276,7 +276,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["e7:01:66:04:d8:69:9a:92:a9:01:7d:ee:b9:a3:66:28"]
       - attach_workspace: 
-          at: ~/
+          at: /tmp/.circleci/ansible
       - run:
           name: Install dependencies
           command: |
