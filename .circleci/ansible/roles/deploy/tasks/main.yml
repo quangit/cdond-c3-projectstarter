@@ -18,7 +18,6 @@
   shell: |
     cd /home/ubuntu/backend
     tar -vxf artifact.tar.gz
-    rm -f artifact.tar.gz
 
 - name: Start backend
   become: true
