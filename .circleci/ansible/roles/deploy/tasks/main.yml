@@ -12,19 +12,20 @@
     src: artifact.tar.gz
     dest: /home/ubuntu/backend/artifact.tar.gz
     force: no
+    
+- name: Copy node_modules
+  become: true
+  copy:
+    src: node_modules.tar.gz
+    dest: /home/ubuntu/backend/node_modules.tar.gz
+    force: no
 
 - name: Unpack artifact
   become: true
   shell: |
     cd /home/ubuntu/backend
     tar -vxf artifact.tar.gz
-
-- name: "Installing node dependencies"
-  become: true
-  synchronize:
-    src: /root/project/backend/node_modules
-    dest: /home/ubuntu/backend
-    recursive: true
+    tar -vxf node_modules.tar.gz
 
 - name: "run server"
   become: true
