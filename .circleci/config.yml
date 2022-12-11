@@ -232,11 +232,10 @@ jobs:
           name: Run migrations
           working_directory: ./backend
           command: |
-            npm install typescript@latest -g
             npm install
-            sudo npm run migrations > migrations_dump.txt
+            npm run migrations > migrations_dump.txt
       - run:
-          name: Send migration status to kvdb.io OR memstash.io
+          name: Send migration status to kvdb.io
           working_directory: ./backend
           command: |
             export countText=$(grep "has been executed successfully." migrations_dump.txt)
@@ -302,7 +301,6 @@ jobs:
           name: Package backend
           command: |
             cd backend
-            npm install typescript@latest -g
             npm install
             npm run build
             tar -czvf artifact.tar.gz dist/* package*
